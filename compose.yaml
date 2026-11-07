@@ -1,6 +1,23 @@
 services:
-  fastapi:
+  fastapi1:
     build: .
+    environment:
+      INSTANCE_NAME: fastapi1
+    restart: unless-stopped
+
+  fastapi2:
+    build: .
+    environment:
+      INSTANCE_NAME: fastapi2
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:stable-alpine
     ports:
-      - "8002:8000"
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - fastapi1
+      - fastapi2
     restart: unless-stopped
